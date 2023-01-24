@@ -3,18 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" href="/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/libs/reset.css">
     <link rel="stylesheet" href="/styles.css">
     <title>Document</title>
 </head>
 <body>
-    <h1>
-        Hello World
-    </h1>
-    <img src="/assets/images/cat.jpeg" alt="" width="300">
-
+    <section>
+        <div class="header__container pt-30">
+            <h1>Countries</h1>
+            <div class="searchbar__wrapper mt-30 mb-30">
+                <div class="searchbar__element-container">
+                    <p>Country</p>
+                    <input type = "textbox" class = "searchbar__input--width js-input-country">
+                </div>
+                <div class="searchbar__element-container">
+                    <p>Capital</p>
+                    <input type = "textbox" class = "searchbar__input--width js-input-capital">
+                </div>
+                <div class="searchbar__element-container">
+                    <p>Currency</p>
+                    <input type = "textbox" class = "searchbar__input--width js-input-currency">
+                </div>
+                <div class="searchbar__element-container">
+                    <p>Language</p>
+                    <input type = "textbox" class = "searchbar__input--width js-input-language">
+                </div>
+            </div>
+            <button class = "button js-search-button">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <p class = "button--text">Search</p>   
+            </button>
+        </div>
+    </section>
+    <section>
+        <div class="table__container js-table-container">
+            <table class="table sortable-markers-on-left mt-30 mb-30 row-hover row-border compact">
+                <thead>
+                <tr>
+                    <th class="sortable-column column-width-40 js-sort-country">Country</th>
+                    <th class="sortable-column column-width-20 js-sort-capital">Capital</th>
+                    <th class="sortable-column column-width-20 js-sort-currency">Currency</th>
+                    <th class="sortable-column column-width-20 js-sort-language">Language</th>
+                </tr>
+                </thead>
+                <tbody class = "js-table">
+                <!-- Here goes data from countries database -->
+                </tbody>
+            </table>
+            <div class="pagination__wrapper mb-30">
+                <button class = "pagination__button js-button-previous">
+                    <p><</p>   
+                </button>
+                <div class = "pagination__page js-current-page">
+                </div>
+                <button class = "pagination__button js-button-next">
+                    <p>></p>   
+                </button>
+            </div>
+        </div>
+    </section>
 
     <script src="/scripts.js"></script>
 </body>
