@@ -1,37 +1,54 @@
 import axios from "axios";
 import {Country} from "./assets/scripts/types"
-import {createSingleLine, removeSortClasses, setDescending, setAscending} from "./assets/scripts/functions"
+import {createSingleLine, removeSortClasses, setDescending, setAscending, disablePreviousButton, enablePreviousButton, disableFirstButton, enableFirstButton, disableNextButton, enableNextButton, disableLastButton, enableLastButton} from "./assets/scripts/functions"
+import {table, sortCountry, sortCapital, sortCurrency, sortLanguage, inputName, inputCapital, inputCurrency, inputLanguage, searchButton, buttonPreviousPage, buttonNextPage, buttonLastPage, buttonFirstPage, currentPage} from "./assets/scripts/constants"
 
-const table = document.querySelector<HTMLTableElement>(".js-table");
-const sortCountry = document.querySelector<HTMLTableCellElement>(".js-sort-country");
-const sortCapital = document.querySelector<HTMLTableCellElement>(".js-sort-capital");
-const sortCurrency = document.querySelector<HTMLTableCellElement>(".js-sort-currency");
-const sortLanguage = document.querySelector<HTMLTableCellElement>(".js-sort-language");
-const inputName = document.querySelector<HTMLInputElement>(".js-input-country");
-const inputCapital = document.querySelector<HTMLInputElement>(".js-input-capital");
-const inputCurrency = document.querySelector<HTMLInputElement>(".js-input-currency");
-const inputLanguage = document.querySelector<HTMLInputElement>(".js-input-language");
-const searchButton = document.querySelector<HTMLButtonElement>(".js-search-button");
-const buttonPreviousPage = document.querySelector<HTMLButtonElement>(".js-button-previous");
-const buttonNextPage = document.querySelector<HTMLButtonElement>(".js-button-next");
-const currentPage = document.querySelector<HTMLDivElement>(".js-current-page");
-
+let pointerPosition: number;
 let sortingOrder = "asc";
 let sortingValue = "name";
 let page = 1;
 let searchParam = "";
+let lastPage: number;
 
 
-const showData = (page: number) =>{
+const showData = (page: number, scrollDown?: boolean) =>{
     axios.get(`http://localhost:3004/countries?&_page=${page}&_limit=20&_sort=${sortingValue}&_order=${sortingOrder}${searchParam}`).then(res => {
         const countries: Country[] = res.data;
+        const pageLinks = (res.headers.link).split(",")
+        
+        const last = pageLinks.find(element => {
+            if (element.includes("last")) {
+                return true;
+            }
+        });
+        if(last !== undefined){
+            const searchParams = new URLSearchParams((last.trim().split(" "))[0]);
+            lastPage = +searchParams.getAll("_page").join("")
+        }else{
+            lastPage = 1;
+            disablePreviousButton()
+            disableFirstButton()
+            disableNextButton()
+            disableLastButton()
+        }
+        
+
         countries.forEach(country => {
             createSingleLine(country, table)
         })
+        if(scrollDown){
+            const scrollingElement = (document.scrollingElement || document.body);
+            scrollingElement.scrollTop = scrollingElement.scrollHeight;
+        }
+
+        if(page !== lastPage){
+            buttonNextPage.disabled = false;
+            buttonLastPage.disabled = false;
+        }
+        
     })
     currentPage.innerHTML = String(page);
 }
-// http://localhost:3004/countries?_page=1&_limit=10&_sort=${sortingValue}&_order=${sortingOrder}${searchParam}
 
 
 // SORT EVENT LISTENERS
@@ -55,8 +72,7 @@ const addSortEventListener = (sortItem: HTMLTableCellElement, sortRemoveElement1
             }
             if(sortItem === sortLanguage){
                 sortingValue = "language.name"
-            }
-                
+            }                
 
             if(sortItem.classList.contains("sort-desc")){
                 setAscending(sortItem);
@@ -68,7 +84,6 @@ const addSortEventListener = (sortItem: HTMLTableCellElement, sortRemoveElement1
             
             table.innerHTML = ""
             showData(page)
-
         })
 }
 
@@ -92,22 +107,49 @@ searchButton.addEventListener("click", () => {
     table.innerHTML = ""
     page=1;
     showData(page)
-
 })
 
+// PAGINATION buttons
 buttonPreviousPage.addEventListener("click", () => {
     page -= 1;
     table.innerHTML = ""
-    showData(page);
+    showData(page, true);
+    enableNextButton()
+    enableLastButton()
     if(page === 1){
-        buttonPreviousPage.disabled = true;
-    }  
+        disablePreviousButton()
+        disableFirstButton()
+    }
 })
 buttonNextPage.addEventListener("click", () => {
     page += 1;
     table.innerHTML = ""
-    showData(page);
+    showData(page, true);
     buttonPreviousPage.disabled = false;
+    buttonFirstPage.disabled = false;
+    if(page === lastPage){
+        disableNextButton();
+        disableLastButton();
+    } 
+    
+})
+buttonFirstPage.addEventListener("click", () => {
+    page = 1;
+    table.innerHTML = ""
+    showData(page, true);
+    disablePreviousButton();
+    disableFirstButton();
+    enableNextButton();
+    enableLastButton();
+})
+buttonLastPage.addEventListener("click", () => {
+    page = lastPage;
+    table.innerHTML = ""
+    showData(page, true);
+    disableNextButton();
+    disableLastButton();
+    enablePreviousButton();
+    enableFirstButton();
 })
 
 addSortEventListener(sortCountry, sortCapital, sortCurrency, sortLanguage);
@@ -116,91 +158,5 @@ addSortEventListener(sortCurrency, sortCountry, sortCapital, sortLanguage);
 addSortEventListener(sortLanguage, sortCountry, sortCapital, sortCurrency);
 
 showData(page)
-buttonPreviousPage.disabled = true;
-
-
-
-// BACKUP FOR SORTING EVENT LISTENERS
-// SORT COUNTRY
-
-// sortCountry.addEventListener("click", () => {
-            
-//             removeSortClasses(sortCapital);
-//             removeSortClasses(sortCurrency);
-//             removeSortClasses(sortLanguage);
-//             sortingValue = "name"
-    
-//             if(sortCountry.classList.contains("sort-desc")){
-//                 setAscending(sortCountry);
-//                 sortingOrder = "asc"
-//             }else{
-//                 setDescending(sortCountry);
-//                 sortingOrder = "desc"
-//             }
-
-//             table.innerHTML = ""
-//             showData()
-//         })
-
-// // SORT CAPITAL
-
-// sortCapital.addEventListener("click", () => {
-            
-//             removeSortClasses(sortCountry);
-//             removeSortClasses(sortCurrency);
-//             removeSortClasses(sortLanguage);
-//             sortingValue = "capital"
-    
-//             if(sortCapital.classList.contains("sort-desc")){
-//                 setAscending(sortCapital);
-//                 sortingOrder = "asc"
-//             }else{
-//                 setDescending(sortCapital);
-//                 sortingOrder = "desc"
-//             }
-            
-//             table.innerHTML = ""
-//             showData()
-//         })
-
-// // SORT CURRENCY
-
-// sortCurrency.addEventListener("click", () => {
-            
-//     removeSortClasses(sortCountry);
-//     removeSortClasses(sortCapital);
-//     removeSortClasses(sortLanguage);
-//     sortingValue = "currency.name"
-
-//     if(sortCurrency.classList.contains("sort-desc")){
-//         setAscending(sortCurrency);
-//         sortingOrder = "asc"
-//     }else{
-//         setDescending(sortCurrency);
-//         sortingOrder = "desc"
-//     }
-    
-//     table.innerHTML = ""
-//     showData()
-// })
-
-// // SORT LANGUAGE
-
-// sortLanguage.addEventListener("click", () => {
-            
-//     removeSortClasses(sortCountry);
-//     removeSortClasses(sortCapital);
-//     removeSortClasses(sortCurrency);
-//     sortingValue = "language.name"
-
-//     if(sortLanguage.classList.contains("sort-desc")){
-//         setAscending(sortLanguage);
-//         sortingOrder = "asc"
-//     }else{
-//         setDescending(sortLanguage);
-//         sortingOrder = "desc"
-//     }
-    
-//     table.innerHTML = ""
-//     showData()
-// })
+disablePreviousButton();
+disableFirstButton();

@@ -1,6 +1,14 @@
 import {Country} from "./types";
+import {buttonPreviousPage, buttonNextPage, buttonLastPage, buttonFirstPage} from "./constants"
 
-
+export const disablePreviousButton = () => {buttonPreviousPage.disabled = true}
+export const enablePreviousButton = () => {buttonPreviousPage.disabled = false} 
+export const disableFirstButton = () => {buttonFirstPage.disabled = true} 
+export const enableFirstButton = () => {buttonFirstPage.disabled = false}
+export const disableNextButton = () => {buttonNextPage.disabled = true}
+export const enableNextButton = () => {buttonNextPage.disabled = false} 
+export const disableLastButton = () => {buttonLastPage.disabled = true}
+export const enableLastButton = () => {buttonLastPage.disabled = false} 
 
 export const createSingleLine = (input: Country, table: HTMLTableElement) => {
     table.innerHTML += `<tr><td>${input.name}</td>

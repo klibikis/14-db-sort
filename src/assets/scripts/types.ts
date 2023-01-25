@@ -1,5 +1,3 @@
-export type {Currency, Language, Country};
-
 type Currency = {
     code: string,
     name: string,
@@ -9,7 +7,7 @@ type Language = {
     code: string,
     name: string
 }
-type Country = {
+export type Country = {
     name: string,
     capital: string,
     currency: Currency,

@@ -1,0 +1,15 @@
+export const table = document.querySelector<HTMLTableElement>(".js-table");
+export const sortCountry = document.querySelector<HTMLTableCellElement>(".js-sort-country");
+export const sortCapital = document.querySelector<HTMLTableCellElement>(".js-sort-capital");
+export const sortCurrency = document.querySelector<HTMLTableCellElement>(".js-sort-currency");
+export const sortLanguage = document.querySelector<HTMLTableCellElement>(".js-sort-language");
+export const inputName = document.querySelector<HTMLInputElement>(".js-input-country");
+export const inputCapital = document.querySelector<HTMLInputElement>(".js-input-capital");
+export const inputCurrency = document.querySelector<HTMLInputElement>(".js-input-currency");
+export const inputLanguage = document.querySelector<HTMLInputElement>(".js-input-language");
+export const searchButton = document.querySelector<HTMLButtonElement>(".js-search-button");
+export const buttonPreviousPage = document.querySelector<HTMLButtonElement>(".js-button-previous");
+export const buttonNextPage = document.querySelector<HTMLButtonElement>(".js-button-next");
+export const buttonLastPage = document.querySelector<HTMLButtonElement>(".js-button-last");
+export const buttonFirstPage = document.querySelector<HTMLButtonElement>(".js-button-first");
+export const currentPage = document.querySelector<HTMLDivElement>(".js-current-page");
